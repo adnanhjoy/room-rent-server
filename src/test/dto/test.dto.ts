@@ -1,11 +1,11 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class CreateTestDto{
-    @IsString()
-    @IsNotEmpty()
-    name: string;
+export class CreateTestDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
-    @IsOptional()
-    @IsNumber()
-    age?: number;
+  @IsOptional()
+  @IsNumber()
+  age?: number;
 }
