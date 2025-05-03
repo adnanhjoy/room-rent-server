@@ -7,16 +7,19 @@ import {
   Param,
   Body,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { TestService } from './test.service';
 import { CreateTestDto } from './dto/test.dto';
 import { Response } from 'express';
+import { UserGuardGuard } from 'src/common/guard/user.guard/user.guard.guard';
 
 @Controller('/test')
 export class TestController {
   constructor(private readonly testService: TestService) {}
 
   @Get('/')
+  @UseGuards(UserGuardGuard)
   getWelcome(@Res() res: Response) {
     return res.status(200).send({
       message: 'OK',
