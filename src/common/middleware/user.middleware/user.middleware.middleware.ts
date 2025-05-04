@@ -6,7 +6,7 @@ export class UserMiddlewareMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     const headers = req.headers;
     console.log('Headers', headers);
-    if (headers['secret'] === '121318') {
+    /* if (headers['secret'] === '121318') {
       console.log('Secret key is correct');
       next();
     } else {
@@ -15,6 +15,7 @@ export class UserMiddlewareMiddleware implements NestMiddleware {
         data: null,
         message: 'Secret key is incorrect',
       });
-    }
+    } */
+    next()
   }
 }
