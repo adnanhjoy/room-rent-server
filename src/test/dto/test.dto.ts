@@ -7,7 +7,7 @@ export class CreateTestDto {
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({required:false})
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
   age?: number;
