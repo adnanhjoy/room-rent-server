@@ -16,6 +16,11 @@ export class CreateUserDto{
     password: string;
 
 
+    @IsString()
+    @IsNotEmpty()
+    role: string;
+
+
     @IsOptional()
     @IsNumber()
     age?: number;
