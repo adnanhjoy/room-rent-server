@@ -14,6 +14,7 @@ async function bootstrap() {
   });
   app.enableVersioning({
     type: VersioningType.URI,
+    prefix: 'api/v',
   });
   const config = new DocumentBuilder()
     .setTitle('Room Rent Server')
