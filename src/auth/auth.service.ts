@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/user/user.schema';
 import ApiError from 'src/errors/ApiError';
-import { CreateUserDto } from 'src/user/dto/user.dto';
+import { CreateUserDto, LoginUserDto } from 'src/user/dto/user.dto';
 
 @Injectable()
 export class AuthService {
@@ -79,4 +79,49 @@ export class AuthService {
 
 
   // login user 
+  async userLogin(loginUserDto: LoginUserDto): Promise<{ token: string }> {
+    const { email, password } = loginUserDto || {};
+
+    if (!email || !password) {
+      throw new ApiError(HttpStatus.BAD_REQUEST, 'Email and password are required');
+    }
+
+    try {
+      const user = await this.userModel.findOne({ email }).select('+password').exec();
+
+      if (!user) {
+        throw new ApiError(HttpStatus.UNAUTHORIZED, 'Invalid credentials');
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordValid) {
+        throw new ApiError(HttpStatus.UNAUTHORIZED, 'Invalid credentials');
+      }
+
+      const token = jwt.sign(
+        {
+          email: user.email,
+          role: user.role,
+          name: user.name
+        },
+        process.env.JWT_SECRET as string,
+        { expiresIn: '1d' }
+      );
+
+
+      return { token }
+
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+
+      throw new ApiError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Login failed',
+        error.message
+      );
+    }
+  }
 }

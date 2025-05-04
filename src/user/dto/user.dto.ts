@@ -25,3 +25,15 @@ export class CreateUserDto{
     @IsNumber()
     age?: number;
 }
+
+
+export class LoginUserDto{
+    @IsString()
+    @IsNotEmpty()
+    email: string;
+
+
+    @IsString()
+    @IsNotEmpty()
+    password: string;
+}
