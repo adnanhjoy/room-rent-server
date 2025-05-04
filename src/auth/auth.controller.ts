@@ -1,7 +1,8 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/user/dto/user.dto';
 import { Response } from 'express';
+import { sendResponse } from 'src/utils/sendResponse';
 
 @Controller('auth')
 export class AuthController {
@@ -9,7 +10,13 @@ export class AuthController {
 
     @Post('/create')
     async userCreate(@Body() payload: CreateUserDto, @Res() res: Response) {
-        const newUser = await this.authService.createUser(payload);
-        return res.status(201).json(newUser);
+        const result = await this.authService.createUser(payload);
+        
+        sendResponse(res, {
+            success: true,
+            statusCode: HttpStatus.CREATED,
+            message: "User created successfull",
+            data: result
+        })
     }
 }
