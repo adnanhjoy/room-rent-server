@@ -39,7 +39,7 @@ import { verify, JwtPayload } from 'jsonwebtoken';
 @Injectable()
 export class UserGuardGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<Request & { name?: string; email?: string }>();
+    const request = context.switchToHttp().getRequest<Request & { name?: string; email?: string; role?: string }>();
     const token = request.headers.authorization;
 
     if (!token) {
@@ -50,6 +50,7 @@ export class UserGuardGuard implements CanActivate {
       const decoded = verify(token, process.env.JWT_SECRET as string) as JwtPayload;
       request.name = decoded.name;
       request.email = decoded.email;
+      request.role = decoded.role;
       return true;
     } catch (err) {
       throw new UnauthorizedException('Invalid or expired token');
