@@ -41,7 +41,9 @@ async function bootstrap() {
     .addTag('Room Rent')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('api', app, documentFactory, {
+    swaggerOptions: { defaultModelsExpandDepth: -1 },
+  });
   console.log('Listening Port is ', `http://localhost:${process.env.PORT}`);
   await app.listen(process.env.PORT ?? 3000);
 }
