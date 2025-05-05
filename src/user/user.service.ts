@@ -12,9 +12,30 @@ export class UserService {
 
     async getAllUser(): Promise<User[]> {
         try {
-            return await this.userModel.find().exec();
+            return await this.userModel
+                .find()
+                .select('-password')
+                .exec();
         } catch (error) {
             throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Failed to fetch users');
         }
     }
+
+
+
+    // get single user by email
+    async getUserByEmail(email: string): Promise<User | null> {
+        try {
+            return await this.userModel
+                .findOne({ email })
+                .select('-password -role')
+                .exec();
+        } catch (error) {
+            throw new ApiError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                'Failed to fetch user by email',
+            );
+        }
+    }
+
 }
