@@ -18,7 +18,7 @@ async function bootstrap() {
   });
   const config = new DocumentBuilder()
     .setTitle('Room Rent Server')
-    /* .addBearerAuth(
+    .addBearerAuth(
       {
         type: 'http',
         scheme: 'bearer',
@@ -27,15 +27,15 @@ async function bootstrap() {
         in: 'header',
       },
       'access-token',
-    ) */
-    .addApiKey(
+    )
+    /* .addApiKey(
       {
         type: 'apiKey',
         name: 'secret',
         in: 'header',
       },
       'api-key',
-    )
+    ) */
     .setDescription('Rent Service Management')
     .setVersion('1.0')
     .addTag('Room Rent')

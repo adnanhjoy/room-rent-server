@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/user.dto';
 import { Request, Response } from 'express';
 import { sendResponse } from 'src/utils/sendResponse';
 import { UserGuardGuard } from 'src/common/guard/user.guard/user.guard.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('/user')
 export class UserController {
@@ -27,6 +28,7 @@ export class UserController {
 
     // get single user by email 
     @UseGuards(UserGuardGuard)
+    @ApiBearerAuth('access-token')
     @Get(':email')
     async getUserByEmail(
         @Param('email') params: string,
