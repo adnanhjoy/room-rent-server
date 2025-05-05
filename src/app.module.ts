@@ -22,7 +22,7 @@ import { UserModule } from './user/user.module';
     MongooseModule.forRoot(process.env.DB_URI ?? ''),
     TestModule,
     AuthModule,
-    UserModule
+    UserModule,
   ],
   controllers: [AppController, TestController],
   providers: [AppService],

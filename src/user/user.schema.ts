@@ -11,21 +11,21 @@ export class User {
   @Prop({
     required: true,
     unique: true,
-    type: String
+    type: String,
   })
   email: string;
 
   @Prop({
     required: true,
     type: String,
-    minlength: 8
+    minlength: 8,
   })
   password: string;
 
   @Prop({
     type: String,
-    enum: ["superadmin", "admin", "owner", "subowner", "user"],
-    default: 'user'
+    enum: ['superadmin', 'admin', 'owner', 'subowner', 'user'],
+    default: 'user',
   })
   role: string;
 
