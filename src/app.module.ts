@@ -12,6 +12,7 @@ import { TestModule } from './test/test.module';
 import { UserMiddlewareMiddleware } from './common/middleware/user.middleware/user.middleware.middleware';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ConfigModule } from '@nestjs/config';
     MongooseModule.forRoot(process.env.DB_URI ?? ''),
     TestModule,
     AuthModule,
+    UserModule
   ],
   controllers: [AppController, TestController],
   providers: [AppService],
