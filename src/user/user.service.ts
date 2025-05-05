@@ -25,12 +25,27 @@ export class UserService {
 
 
     // get single user by email
-    async getUserByEmail(email: string): Promise<User | null> {
+    async getUserByEmail(
+        params: string,
+        email?: string,
+        role?: string
+    ): Promise<User | null> {
         try {
-            return await this.userModel
-                .findOne({ email })
-                .select('-password -role')
-                .exec();
+            console.log(role);
+            if (role === 'superadmin' || role === 'admin') {
+                return await this.userModel
+                    .findOne({ email: params })
+                    .select('-password -role')
+                    .exec();
+            } else {
+                if (params === email) {
+                    return await this.userModel
+                        .findOne({ email: params })
+                        .select('-password -role')
+                        .exec();
+                }
+            }
+            return null
         } catch (error) {
             throw new ApiError(
                 HttpStatus.INTERNAL_SERVER_ERROR,

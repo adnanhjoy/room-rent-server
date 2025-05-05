@@ -26,9 +26,16 @@ export class UserController {
 
 
     // get single user by email 
+    @UseGuards(UserGuardGuard)
     @Get(':email')
-    async getUserByEmail(@Param('email') email: string, @Res() res: Response) {
-        const result = await this.userService.getUserByEmail(email);
+    async getUserByEmail(
+        @Param('email') params: string,
+        @Req() req: Request & { role?: string; email?: string },
+        @Res() res: Response
+    ) {
+        const { email, role } = req;
+
+        const result = await this.userService.getUserByEmail(params, email, role);
 
         sendResponse(res, {
             success: true,
