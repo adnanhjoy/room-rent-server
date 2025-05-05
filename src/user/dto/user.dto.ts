@@ -17,7 +17,7 @@ export class CreateUserDto {
     @IsNotEmpty()
     password: string;
 
-    @ApiProperty({ required: true, description: "role", enum: ['super-admin', 'admin', 'owner', 'sub-owner', 'user'], default: "user" })
+    @ApiProperty({ required: true, description: "role", enum: ['superadmin', 'admin', 'owner', 'subowner', 'user'], default: "user" })
     @IsString()
     @IsNotEmpty()
     role: string;

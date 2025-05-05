@@ -41,6 +41,24 @@ export class AuthService {
         throw new ApiError(HttpStatus.CONFLICT, 'User already exists');
       }
 
+
+      if (role === 'superadmin') {
+        const superAdminExist = await this.userModel.findOne({ role: 'superadmin' });
+
+        if (superAdminExist) {
+          throw new ApiError(HttpStatus.CONFLICT, 'Only one superadmin is allowed');
+        }
+      }
+
+
+      if (role === 'admin') {
+        const superAdminExist = await this.userModel.findOne({ role: 'superadmin' });
+        if (!superAdminExist) {
+          throw new ApiError(HttpStatus.FORBIDDEN, 'Superadmin must exist before creating an admin');
+        }
+      }
+
+
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const createdUser = new this.userModel({
