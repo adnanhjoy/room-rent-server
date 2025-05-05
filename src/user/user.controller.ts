@@ -1,8 +1,9 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/user.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { sendResponse } from 'src/utils/sendResponse';
+import { UserGuardGuard } from 'src/common/guard/user.guard/user.guard.guard';
 
 @Controller('/user')
 export class UserController {
@@ -27,13 +28,44 @@ export class UserController {
     // get single user by email 
     @Get(':email')
     async getUserByEmail(@Param('email') email: string, @Res() res: Response) {
-      const result = await this.userService.getUserByEmail(email);
-  
-      sendResponse(res, {
-        success: true,
-        statusCode: HttpStatus.OK,
-        message: 'User fetched successfully',
-        data: result,
-      });
+        const result = await this.userService.getUserByEmail(email);
+
+        sendResponse(res, {
+            success: true,
+            statusCode: HttpStatus.OK,
+            message: 'User fetched successfully',
+            data: result,
+        });
     }
+
+
+
+    // update user by email 
+
+    @UseGuards(UserGuardGuard)
+    @Put('/update')
+    async updateUserByEmail(
+        @Body() body: Partial<CreateUserDto>,
+        @Req() req: Request & { name?: string; email?: string },
+        @Res() res: Response
+    ) {
+        const email = req.email;
+
+        if (!email) {
+            return res.status(HttpStatus.BAD_REQUEST).json({
+                success: false,
+                message: "Email is missing from token",
+            });
+        }
+
+        const result = await this.userService.updateUserByEmail(email, body);
+
+        sendResponse(res, {
+            success: true,
+            statusCode: HttpStatus.OK,
+            message: "User update successful",
+            data: result,
+        });
+    }
+
 }
