@@ -1,8 +1,9 @@
-import { HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.schema';
 import { Model } from 'mongoose';
 import ApiError from 'src/errors/ApiError';
+import { CreateUserDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -33,9 +34,30 @@ export class UserService {
         } catch (error) {
             throw new ApiError(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                'Failed to fetch user by email',
+                'There was a server side error',
             );
         }
     }
+
+
+
+    // update user 
+    async updateUserByEmail(
+        email: string,
+        payload: Partial<CreateUserDto>,
+    ): Promise<User | null> {
+        try {
+            const updatedUser = await this.userModel.findOneAndUpdate(
+                { email },
+                payload,
+                { new: true }
+            );
+
+            return updatedUser;
+        } catch (error) {
+            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "There was a server side error");
+        }
+    }
+
 
 }
