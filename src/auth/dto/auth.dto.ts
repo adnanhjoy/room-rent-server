@@ -7,3 +7,13 @@ export class AuthForgotDto {
   @IsEmail()
   email: string;
 }
+
+export class AuthResetDto {
+  @ApiProperty({ required: true, description: 'password' })
+  @IsString()
+  password: string;
+
+  @ApiProperty({ required: true, description: 'token' })
+  @IsString()
+  token: string;
+}

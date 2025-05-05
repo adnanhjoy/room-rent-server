@@ -1,4 +1,10 @@
-import { Injectable, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpStatus,
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
@@ -7,6 +13,7 @@ import { User } from 'src/user/user.schema';
 import ApiError from 'src/errors/ApiError';
 import { CreateUserDto, LoginUserDto } from 'src/user/dto/user.dto';
 import { MailService } from 'src/mail/mail.service';
+import { JwtPayload, verify } from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -188,6 +195,40 @@ export class AuthService {
           ? String((error as { message: unknown }).message)
           : 'Unknown error',
       );
+    }
+  }
+
+  async resetPassword(token: string, password: string): Promise<void | string> {
+    try {
+      const decoded = verify(
+        token,
+        process.env.JWT_SECRET as string,
+      ) as JwtPayload;
+
+      if (!decoded) {
+        throw new UnauthorizedException('Unauthorized Access: Invalid token');
+      }
+      const { email } = decoded;
+      if (!email) {
+        throw new BadRequestException('Invalid token');
+      }
+      this.validatePassword(password);
+      const user = await this.userModel.findOne({ email }).exec();
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      const hashedPassword = await bcrypt.hash(
+        password,
+        parseInt(process.env.SALT_ROUNDS as string, 10),
+      );
+
+      user.password = hashedPassword;
+
+      await user.save();
+      return 'Password Update Successful';
+    } catch {
+      throw new BadRequestException('Token expired or invalid');
     }
   }
 }

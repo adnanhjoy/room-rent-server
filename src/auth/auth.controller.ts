@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto } from 'src/user/dto/user.dto';
 import { Response } from 'express';
 import { sendResponse } from 'src/utils/sendResponse';
-import { AuthForgotDto } from './dto/auth.dto';
+import { AuthForgotDto, AuthResetDto } from './dto/auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -50,6 +50,27 @@ export class AuthController {
       success: true,
       statusCode: HttpStatus.OK,
       message: 'Password reset link sent to your email',
+      data: result,
+    };
+  }
+
+  @Post('reset-password')
+  async resetPassword(@Body() payload: AuthResetDto) {
+    const { token, password } = payload;
+    if (!token || !password) {
+      return {
+        success: false,
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'Token and password are required',
+      };
+    }
+
+    const result = await this.authService.resetPassword(token, password);
+
+    return {
+      success: true,
+      statusCode: HttpStatus.OK,
+      message: 'Password reset successfully',
       data: result,
     };
   }
