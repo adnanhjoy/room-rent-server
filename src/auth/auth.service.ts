@@ -178,7 +178,7 @@ export class AuthService {
       },
       process.env.JWT_SECRET as string,
       {
-        expiresIn: '1h',
+        expiresIn: '3m',
       },
     );
     const resetLink: string = `${process.env.FRONTEND_URL}/reset-password/${token}`;
