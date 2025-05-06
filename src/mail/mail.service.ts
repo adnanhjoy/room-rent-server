@@ -28,7 +28,7 @@ export class MailService {
       from: `"Room Rent" <${process.env.EMAIL_USER}>`,
       to,
       subject: 'Password Reset Request',
-      text: `You requested a password reset. Click this link to reset your password: ${resetLink}. This link will expire in 1 hour.`,
+      text: `You requested a password reset. Click this link to reset your password: ${resetLink}. This link will expire in 3 minute.`,
       html: `
   <!DOCTYPE html>
   <html lang="en">
@@ -72,7 +72,7 @@ export class MailService {
                                           <a href="${resetLink}" style="display: inline-block; background-color: #3b82f6; color: #ffffff; font-size: 16px; font-weight: 600; padding: 12px 32px; border-radius: 6px; text-decoration: none; transition: background-color 0.2s;" class="button">Reset Your Password</a>
                                       </tr>
                                   </table>
-                                  <p style="font-size: 16px; line-height: 24px; margin-bottom: 16px;">This link will expire in 1 hour for your security.</p>
+                                  <p style="font-size: 16px; line-height: 24px; margin-bottom: 16px;">This link will expire in 3 minute for your security.</p>
                                   <p style="font-size: 16px; line-height: 24px; margin-bottom: 16px;">If you didn’t request a password reset, please ignore this email or contact our support team at <a href="mailto:support@example.com" style="color: #3b82f6; text-decoration: underline;">support@example.com</a>.</p>
                                   <p style="font-size: 16px; line-height: 24px; margin-bottom: 0;">Best regards,</p>
                                   <p style="font-size: 16px; font-weight: 600; color: #1e3a8a;">The Support Team</p>
