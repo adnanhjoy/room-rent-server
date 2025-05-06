@@ -25,7 +25,7 @@ export class MailService {
     //   `,
     // };
     const mailOptions = {
-      from: `"Support Team" <${process.env.EMAIL_USER}>`,
+      from: `"Room Rent" <${process.env.EMAIL_USER}>`,
       to,
       subject: 'Password Reset Request',
       text: `You requested a password reset. Click this link to reset your password: ${resetLink}. This link will expire in 1 hour.`,
