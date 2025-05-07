@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateTestDto {
   @ApiProperty()
@@ -11,4 +17,9 @@ export class CreateTestDto {
   @IsOptional()
   @IsNumber()
   age?: number;
+
+  @ApiProperty({ required: true, description: 'userId' })
+  @IsMongoId()
+  @IsNotEmpty()
+  userId: string;
 }
