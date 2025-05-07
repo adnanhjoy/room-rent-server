@@ -13,11 +13,7 @@ import { UserMiddlewareMiddleware } from './common/middleware/user.middleware/us
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
-import { PropertyController } from './property/property.controller';
-import { ApartmentController } from './apartment/apartment.controller';
-import { ApartmentService } from './apartment/apartment.service';
 import { ApartmentModule } from './apartment/apartment.module';
-import { PropertyService } from './property/property.service';
 import { PropertyModule } from './property/property.module';
 
 @Module({
@@ -30,10 +26,10 @@ import { PropertyModule } from './property/property.module';
     AuthModule,
     UserModule,
     PropertyModule,
-    ApartmentModule,
+    ApartmentModule
   ],
   controllers: [AppController, TestController],
-  providers: [AppService, ApartmentService, PropertyService],
+  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
