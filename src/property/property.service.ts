@@ -7,12 +7,18 @@ import { PropertyDto } from './dto/property.dto';
 
 @Injectable()
 export class PropertyService {
-    constructor(@InjectModel(Property.name) private propertyModel: Model<PropertyDocument>) { }
+    constructor(@InjectModel(Property.name) private readonly propertyModel: Model<PropertyDocument>) { }
 
     // add property 
-    async addProperty(propertyDto: PropertyDto): Promise<Property> {
-        const addProperty = new this.propertyModel(propertyDto);
-        return await addProperty.save();
+    async addProperty(payload: Partial<PropertyDto>,): Promise<Property> {
+
+        try {
+            const addProperty = new this.propertyModel(payload);
+            return await addProperty.save();
+        } catch (error) {
+            console.log(error);
+            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "There was a server side error")
+        }
     }
 
 
