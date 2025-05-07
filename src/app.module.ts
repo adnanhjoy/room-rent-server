@@ -29,10 +29,10 @@ import { PropertyModule } from './property/property.module';
     TestModule,
     AuthModule,
     UserModule,
-    ApartmentModule,
     PropertyModule,
+    ApartmentModule,
   ],
-  controllers: [AppController, TestController, PropertyController, ApartmentController],
+  controllers: [AppController, TestController],
   providers: [AppService, ApartmentService, PropertyService],
 })
 export class AppModule implements NestModule {

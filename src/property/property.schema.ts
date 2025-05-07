@@ -30,7 +30,7 @@ export class Property {
     @Prop({
         required: true
     })
-    type: string;
+    propertyType: string;
 
 
 
