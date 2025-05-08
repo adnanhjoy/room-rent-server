@@ -7,72 +7,67 @@ import { CreateUserDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
-    constructor(
-        @InjectModel(User.name) private userModel: Model<UserDocument>
-    ) { }
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-    async getAllUser(): Promise<User[]> {
-        try {
-            return await this.userModel
-                .find()
-                .select('-password')
-                .exec();
-        } catch (error) {
-            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Failed to fetch users');
-        }
+  async getAllUser(): Promise<User[]> {
+    try {
+      return await this.userModel.find().select('-password').exec();
+    } catch {
+      throw new ApiError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Failed to fetch users',
+      );
     }
+  }
 
-
-
-    // get single user by email
-    async getUserByEmail(
-        params: string,
-        email?: string,
-        role?: string
-    ): Promise<User | null> {
-        try {
-            console.log(role);
-            if (role === 'superadmin' || role === 'admin') {
-                return await this.userModel
-                    .findOne({ email: params })
-                    .select('-password -role')
-                    .exec();
-            } else {
-                if (params === email) {
-                    return await this.userModel
-                        .findOne({ email: params })
-                        .select('-password -role')
-                        .exec();
-                }
-            }
-            return null
-        } catch (error) {
-            throw new ApiError(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                'There was a server side error',
-            );
+  // get single user by email
+  async getUserByEmail(
+    params: string,
+    email?: string,
+    role?: string,
+  ): Promise<User | null> {
+    try {
+      console.log(role);
+      if (role === 'superadmin' || role === 'admin') {
+        return await this.userModel
+          .findOne({ email: params })
+          .select('-password -role')
+          .exec();
+      } else {
+        if (params === email) {
+          return await this.userModel
+            .findOne({ email: params })
+            .select('-password -role')
+            .exec();
         }
+      }
+      return null;
+    } catch {
+      throw new ApiError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'There was a server side error',
+      );
     }
+  }
 
+  // update user
+  async updateUserByEmail(
+    email: string,
+    payload: Partial<CreateUserDto>,
+  ): Promise<User | null> {
+    try {
+      const updatedUser = await this.userModel.findOneAndUpdate(
+        { email },
+        payload,
+        { new: true },
+      );
 
-
-    // update user 
-    async updateUserByEmail(
-        email: string,
-        payload: Partial<CreateUserDto>,
-    ): Promise<User | null> {
-        try {
-            const updatedUser = await this.userModel.findOneAndUpdate(
-                { email },
-                payload,
-                { new: true }
-            );
-
-            return updatedUser;
-        } catch (error) {
-            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "There was a server side error");
-        }
+      return updatedUser;
+    } catch {
+      throw new ApiError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'There was a server side error',
+      );
     }
-
-
+  }
 }

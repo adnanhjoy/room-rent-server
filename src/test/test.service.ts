@@ -18,7 +18,11 @@ export class TestService {
   }
 
   async getAllTests(): Promise<Test[]> {
-    return this.testModel.find().exec();
+    return this.testModel
+      .find()
+      .select('-__v')
+      .sort({ createdAt: -1 })
+      .populate('userId', 'name email');
   }
 
   async getTestById(id: string): Promise<Test> {
