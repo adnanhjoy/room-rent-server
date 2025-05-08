@@ -10,15 +10,15 @@ export class PropertyController {
 
     // add property 
     @Post('/')
-    async addProperty(@Body() payload: PropertyDto, res: Response) {
+    async addProperty(@Body() payload: PropertyDto, @Res() res: Response) {
         const result = await this.propertyService.addProperty(payload)
 
         sendResponse(res, {
             success: true,
             statusCode: HttpStatus.OK,
-            message: "Property Add Successfull",
-            data: result
-        })
+            message: "Property added successful",
+            data: result,
+        });
     }
 
 

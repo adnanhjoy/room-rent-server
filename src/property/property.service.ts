@@ -10,11 +10,13 @@ export class PropertyService {
     constructor(@InjectModel(Property.name) private readonly propertyModel: Model<PropertyDocument>) { }
 
     // add property 
-    async addProperty(payload: Partial<PropertyDto>,): Promise<Property> {
+    async addProperty(payload: PropertyDto,): Promise<Property> {
 
         try {
             const addProperty = new this.propertyModel(payload);
-            return await addProperty.save();
+            const result = await addProperty.save();
+            return result
+
         } catch (error) {
             console.log(error);
             throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "There was a server side error")
@@ -26,11 +28,13 @@ export class PropertyService {
     //   get all property 
     async getAllProperty(): Promise<Property[]> {
         try {
-            return await this.propertyModel.find().exec();
+            return await this.propertyModel.find()
+                .populate('owner', '-password -_id')
+                .exec();
         } catch {
             throw new ApiError(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                'Failed to fetch users',
+                'There was a server side error',
             );
         }
     }
