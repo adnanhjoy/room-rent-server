@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsMongoId, IsNotEmpty, IsString } from "class-validator";
 
 export class ApartmentDto {
     @ApiProperty({ required: true, description: 'name' })
@@ -28,4 +28,17 @@ export class ApartmentDto {
     @IsArray()
     @IsString({ each: true })
     facilities: string[];
+
+
+    @ApiProperty({ required: true, description: 'owner' })
+    @IsMongoId()
+    @IsNotEmpty()
+    owner: string;
+
+
+
+    @ApiProperty({ required: true, description: 'property' })
+    @IsMongoId()
+    @IsNotEmpty()
+    property: string;
 }

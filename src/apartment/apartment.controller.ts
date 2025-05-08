@@ -10,7 +10,7 @@ export class ApartmentController {
 
     // add apartment 
     @Post('/')
-    async addProperty(@Body() payload: ApartmentDto, res: Response) {
+    async addProperty(@Body() payload: ApartmentDto, @Res() res: Response) {
         const result = await this.apartmentService.addApartment(payload)
 
         sendResponse(res, {
