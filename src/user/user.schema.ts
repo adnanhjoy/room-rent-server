@@ -34,8 +34,6 @@ export class User {
 
   @Prop()
   imagePublicId: string;
-
-  
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
