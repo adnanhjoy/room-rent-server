@@ -56,6 +56,13 @@ export class Apartment {
         required: true
     })
     property: Property;
+
+
+    @Prop({
+        default: 'pending',
+        enum: ['pending', 'approved', 'rejected']
+    })
+    status: string
 }
 
 

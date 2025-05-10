@@ -41,4 +41,9 @@ export class ApartmentDto {
     @IsMongoId()
     @IsNotEmpty()
     property: string;
+
+
+
+    @IsString()
+    status: string;
 }
