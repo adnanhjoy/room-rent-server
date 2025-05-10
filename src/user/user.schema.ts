@@ -30,7 +30,12 @@ export class User {
   role: string;
 
   @Prop()
-  age: number;
+  imageUrl: string;
+
+  @Prop()
+  imagePublicId: string;
+
+  
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

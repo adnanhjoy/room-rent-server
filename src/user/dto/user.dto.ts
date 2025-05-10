@@ -1,3 +1,4 @@
+import { UploadedFile } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
@@ -31,6 +32,21 @@ export class CreateUserDto {
   @IsOptional()
   @IsNumber()
   age?: number;
+
+  @ApiProperty({ required: true, description: "image", format: 'binary' })
+  @IsOptional()
+  @IsNotEmpty()
+  image?: string
+
+  @ApiProperty({ required: true, description: 'Image URL from Cloudinary' })
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @ApiProperty({ required: true, description: 'Cloudinary public ID' })
+  @IsOptional()
+  @IsString()
+  imagePublicId?: string;
 }
 
 export class LoginUserDto {
