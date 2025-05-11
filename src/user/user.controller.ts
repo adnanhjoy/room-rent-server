@@ -3,11 +3,14 @@ import {
   Controller,
   Get,
   HttpStatus,
+  MaxFileSizeValidator,
   Param,
+  ParseFilePipe,
   Patch,
   Put,
   Req,
   Res,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -19,10 +22,16 @@ import { sendResponse } from 'src/utils/sendResponse';
 import { UserGuardGuard } from 'src/common/guard/user.guard/user.guard.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Express } from 'express';
+import { v4 as uuidv4 } from 'uuid';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @Controller('/user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    // private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @Get('/')
   async getAllUser(@Res() res: Response) {
@@ -81,17 +90,66 @@ export class UserController {
   }
 
   @Patch('/upload-image')
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadImage(
-    @Req()
-    req: Request & { email: string },
+  // @UseGuards(UserGuardGuard)
+  @ApiBearerAuth('access-token')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads/user-images',
+        filename: (req, file, callback) => {
+          const uniqueSuffix = uuidv4();
+          const ext = extname(file.originalname);
+          callback(null, `${uniqueSuffix}${ext}`);
+        },
+      }),
+    }),
+  )
+  uploadFile(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 2 }), // 2MB limit
+          // new FileTypeValidator({ fileType: /jpeg|jpg|png/ }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
     @Res() res: Response,
   ) {
-    const email = req.email;
-    if (!email) {
-      throw Error('No Email Found');
-    }
-    res.status(HttpStatus.OK).send({ message: 'OK', email: email });
-    return;
+    // file.path will give you the uploaded path
+    sendResponse(res, {
+      success: true,
+      statusCode: HttpStatus.OK,
+      message: 'Image uploaded successfully',
+      data: {
+        filename: file.filename,
+        path: file.path,
+        mimetype: file.mimetype,
+        size: file.size,
+      },
+    });
   }
+
+  /* @Patch('/upload-image')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new MaxFileSizeValidator({ maxSize: 2 * 1024 * 1024 })],
+      }),
+    )
+    file: Express.Multer.File,
+    @Res() res: Response,
+  ) {
+    const result = await this.cloudinaryService.uploadImage(file);
+    sendResponse(res, {
+      success: true,
+      statusCode: HttpStatus.OK,
+      message: 'Image uploaded successfully',
+      data: {
+        url: result.secure_url,
+        public_id: result.public_id,
+      },
+    });
+  } */
 }
