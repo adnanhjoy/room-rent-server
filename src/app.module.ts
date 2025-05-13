@@ -15,7 +15,6 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { ApartmentModule } from './apartment/apartment.module';
 import { PropertyModule } from './property/property.module';
-import { CloudinaryProvider } from './config/cloudinary.provider';
 import { CloudinaryService } from './common/services/cloudinary.service';
 
 @Module({
